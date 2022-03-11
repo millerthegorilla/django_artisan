@@ -294,7 +294,7 @@ class LOCATION(models.TextChoices):
     JERSEY = 'JE', _('Jersey')
     SARK = 'SK', _('Sark')
 ```
-see the file settings.py in this directory for an example settings.py file.
+see the file sample_dev_settings.py in this directory for an example settings.py file.
 
 ## dependencies
 The long list of dependencies are not automatically installed by this package.  Instead, I use [artisan_scripts](https://github.com/millerthegorilla/artisan_scripts) to provision the site using podman.  This has a requirements.txt file which you can find [here](https://raw.githubusercontent.com/millerthegorilla/artisan_scripts/main/dockerfiles/pip_requirements_dev) in the case of running the dev site or [here](https://raw.githubusercontent.com/millerthegorilla/artisan_scripts/main/dockerfiles/pip_requirements_prod) in the case of running the site in production mode.
