@@ -1,1 +1,2 @@
-django_forum@ git+https://github.com/millerthegorilla/django_forum
+django_forum@ git+https://github.com/millerthegorilla/django_forum@main
+django-bs-carousel@ git+https://github.com/millerthegorilla/django-bs-carousel@main
