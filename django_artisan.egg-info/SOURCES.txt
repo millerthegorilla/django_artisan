@@ -53,6 +53,7 @@ django_artisan/migrations/0001_initial.py
 django_artisan/migrations/0002_initial.py
 django_artisan/migrations/0003_auto_20220223_1508.py
 django_artisan/migrations/0004_remove_artisanforumprofile_parish.py
+django_artisan/migrations/0005_alter_artisanforumprofile_image_file.py
 django_artisan/migrations/__init__.py
 django_artisan/migrations/__pycache__/0001_initial.cpython-310.pyc
 django_artisan/migrations/__pycache__/0002_initial.cpython-310.pyc
@@ -60,6 +61,7 @@ django_artisan/migrations/__pycache__/0003_alter_userproductimage_id.cpython-310
 django_artisan/migrations/__pycache__/0003_auto_20220223_1508.cpython-310.pyc
 django_artisan/migrations/__pycache__/0004_alter_userproductimage_image_file.cpython-310.pyc
 django_artisan/migrations/__pycache__/0004_remove_artisanforumprofile_parish.cpython-310.pyc
+django_artisan/migrations/__pycache__/0005_alter_artisanforumprofile_image_file.cpython-310.pyc
 django_artisan/migrations/__pycache__/0005_auto_20220204_1713.cpython-310.pyc
 django_artisan/migrations/__pycache__/0006_userproductimage_del_id.cpython-310.pyc
 django_artisan/migrations/__pycache__/0007_alter_userproductimage_del_id.cpython-310.pyc
