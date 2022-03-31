@@ -1,12 +1,12 @@
 import random, logging, elasticsearch_dsl, typing, json, PIL
+from io import BytesIO
 from PIL import Image, ImageOps
 from sorl.thumbnail import get_thumbnail
 
 from django_q import tasks
-
 from django import conf, http, forms, shortcuts, urls, utils
+from django.core import serializers, files
 from django.core import paginator as pagination
-from django.core import serializers
 from django.contrib import auth
 from django.contrib import sitemaps
 from django.contrib.sites import models as site_models
@@ -147,7 +147,7 @@ class ArtisanForumProfile(forum_views.ForumProfile):
         return dic
 
     def post(self, request:http.HttpRequest) -> typing.Union[http.HttpResponse, http.HttpResponseRedirect]: # type: ignore
-            form = self.form_class(request.POST)
+            form = self.form_class(request.POST, request.FILES)
             user_form = self.user_form_class(request.POST)
             f_valid = False
             u_valid = False
@@ -164,13 +164,33 @@ class ArtisanForumProfile(forum_views.ForumProfile):
                                 tasks.async_task(ping_google_func)
                         except:
                             tasks.async_task(ping_google_func)
+                    changing = []
                     for change in form.changed_data:
-                        if change == 'image_file':
-                            img = Image.open(form['image_file'].value().path)
-                            img = ImageOps.expand(img, border=10, fill='white')
-                            img.save(form['image_file'].value().path)
-                        setattr(profile,change,form[change].value())
-                    profile.save(update_fields=form.changed_data)
+                        if change == "image_file":
+                            profile.image_file.delete()
+                            if form['image_file'].value():
+                                fimg = form['image_file'].value()
+                                name = fimg.name.split('.')[0] + ".webp" 
+                                img = Image.open(fimg)
+                                img = ImageOps.expand(img, border=10, fill='white')
+                                buffer = BytesIO()
+                                img.save(fp=buffer, format='webp')
+                                buff_val = buffer.getvalue()
+                                pil_img = files.base.ContentFile(buff_val)
+                                image_file = files.uploadedfile.InMemoryUploadedFile(pil_img, 
+                                                                                     None,
+                                                                                     name,
+                                                                                     fimg.content_type,
+                                                                                     pil_img.tell,
+                                                                                     None)
+                                profile.image_file = image_file
+                            else:
+                                profile.image_file = None
+                            profile.save(update_fields=['image_file'])
+                        else:
+                            setattr(profile,change,form[change].value())
+                            changing.append(change)
+                    profile.save(update_fields=changing)
             else:
                 self.f_valid = False
 
@@ -198,6 +218,9 @@ class ArtisanForumProfile(forum_views.ForumProfile):
                 context['user_form'] = user_form
                 return shortcuts.render(request, self.template_name, context)
             else:
+                profile.save() # hack as update_fields doesn't seem to work.
+                #return shortcuts.redirect(self.success_url)
+                # am unable to call super methods as profile image_file gets wiped
                 return super().post(request)
 
     def get_context_data(self, *args, **kwargs) -> dict:

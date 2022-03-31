@@ -63,11 +63,21 @@ class ArtisanForumProfile(forum_models.ForumProfile):
                            max_length=500,
                            blank=True,
                            default='')
-    image_file: models.ImageField = models.ImageField(
-        'A single image for your personal page',
-        upload_to=user_directory_path,
-        null=True,
-        blank=True)
+    image_file: safe_image_models.SafeImageField = safe_image_models.SafeImageField(
+                                                            upload_to=user_directory_path,
+                                                            max_length=250,
+                                                            null=True,
+                                                            blank=True,
+                                                            allowed_extensions=('jpg', 'png', 'webp'),
+                                                            check_content_type=True,
+                                                            scan_viruses=True,
+                                                            media_integrity=True,
+                                                            max_size_limit=2621440)
+    # image_file: models.ImageField = models.ImageField(
+    #     'A single image for your personal page',
+    #     upload_to=user_directory_path,
+    #     null=True,
+    #     blank=True)
     shop_web_address: models.CharField = models.CharField(
         'shop link', max_length=50, blank=True, default='')
     outlets: models.CharField = models.CharField(

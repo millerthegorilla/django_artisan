@@ -1,5 +1,5 @@
 # TODO: need to setup clamav.conf properly
-#from typing import Any, Dict
+from typing import Any, Dict
 
 from safe_imagefield import forms as safe_image_forms
 from crispy_forms import layout
@@ -76,20 +76,21 @@ class ArtisanForumProfile(forum_forms.ForumProfile):
         super().__init__(*args, **kwargs)
         self.fields['image_file'].widget.is_required = False
         self.fields['image_file'].required = False
-        self.fields['image_file'].help_text = '<span class="text-white">A single image for your personal page, click Update Profile to upload it...</span>'
+        self.fields['image_file'].help_text = 'A single image for your personal page, \
+                                              click Update Profile to upload it...'
         self.fields['bio'] = forms.fields.CharField(
             label="Biographical Information",
-            help_text='<span class="text-white">Biographical detail is a maximum 500 character space to display \
-                                     on your personal page.</span>',
+            help_text='Biographical detail is a maximum 500 character space to display \
+                                     on your personal page.',
             widget=forms.Textarea(),
             required=False)
         self.fields['shop_web_address'] = forms.fields.CharField(
             label='Your Online Shop Web Address',
-            help_text='<span class="tinfo">Your shop web address to be displayed on your personal page</span>',
+            help_text='Your shop web address to be displayed on your personal page',
             required=False)
         self.fields['outlets'] = forms.fields.CharField(
             label='Outlets that sell your wares',
-            help_text='<span class="tinfo">A comma separated list of outlets that sell your stuff, for your personal page.</span>',
+            help_text='A comma separated list of outlets that sell your stuff, for your personal page',
             required=False)
         self.fields['city'] = forms.fields.CharField(label='Parish', required=False)
         self.fields['country'] = forms.fields.CharField(label='Island', required=False)
@@ -107,6 +108,10 @@ class ArtisanForumProfile(forum_forms.ForumProfile):
         self.helper.form_method = 'post'
         self.helper.form_class = 'col-auto tinfo'
         self.helper.form_tag = False
+
+    # def clean(self) -> Dict[str, Any]:
+    #     breakpoint()
+    #     pass
 
 
 class CustomRegistrationForm(forum_custom_reg_forms.CustomUserCreation):

@@ -9,7 +9,7 @@
     </div>
     <div class="form-control d-flex h-auto">
         <span class="text-break" style="flex-grow:1;min-width:0">
-        <a href="{{ field.value.url }}">{{ path }}</a>
+        {% if path != "False" %}<a href="{{ field.value.url }}">{{ path }}</a>{% endif %}
         </span>
         {% if not widget.data.required %}
         <span class="align-self-center ml-2">

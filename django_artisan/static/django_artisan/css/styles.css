@@ -392,3 +392,8 @@ table th {
     border-bottom: 0;
   }
 }
+
+/* Profile Form */
+.form-text {
+  color:  white !important;
+}
