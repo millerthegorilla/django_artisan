@@ -22,10 +22,8 @@
                                             <a href="/people/{{post.author.profile.display_name}}"><img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" class="rounded-circle" id="image-{{ post.author.profile.display_name }}_avatar-image" title="{{post.author.profile.display_name}}" /></a>
                                         {% endthumbnail %}
                                         {% if post.pinned %}
-                                            {% with site_url|add:'/media/static_images/yellow_pin.png' as banner_url %}
-                                                {% thumbnail banner_url "40x40" format='PNG' as im %}
-                                                <img src="{{ im.url }}" width='30' height='30' title="This post is pinned!">
-                                                {% endthumbnail %}
+                                            {% with '/media/static_images/yellow_pin.png' as banner_url %}
+                                                <img src="{{ banner_url }}" width='30' height='30' title="This post is pinned!">
                                             {% endwith %}
                                         {% endif %}
                                     </td>
@@ -60,9 +58,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     {% with site_url|add:'/media/static_images/nouveau_line.png' as banner_url %}
-                        {% thumbnail banner_url "3000x240" format='PNG' as im %}
-                            <img src="{{ im.url }}" width='100%' height='50'>
-                        {% endthumbnail %}
+                        <img src="{{ banner_url }}" width='100%' height='50'>
                     {% endwith %}
                 </div>
             </div>
