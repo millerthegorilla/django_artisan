@@ -14,6 +14,7 @@ django_artisan/fields.py
 django_artisan/forms.py
 django_artisan/models.py
 django_artisan/sitemaps.py
+django_artisan/tasks.py
 django_artisan/tests.py
 django_artisan/urls.py
 django_artisan/views.py
@@ -32,6 +33,7 @@ django_artisan/__pycache__/fields.cpython-310.pyc
 django_artisan/__pycache__/forms.cpython-310.pyc
 django_artisan/__pycache__/models.cpython-310.pyc
 django_artisan/__pycache__/sitemaps.cpython-310.pyc
+django_artisan/__pycache__/tasks.cpython-310.pyc
 django_artisan/__pycache__/urls.cpython-310.pyc
 django_artisan/__pycache__/views.cpython-310.pyc
 django_artisan/__pycache__/views_forum_post.cpython-310.pyc
