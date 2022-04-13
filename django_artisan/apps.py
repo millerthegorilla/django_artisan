@@ -1,11 +1,12 @@
 import importlib.util
-import sys
+import sys, logging, redis
 
-from django.utils import log
 from django import apps
 from django.db import models
 from django.conf import settings
 from django.core import exceptions
+
+logger = logging.getLogger('django_artisan')
 
 
 class DjangoArtisan(apps.AppConfig):
@@ -17,12 +18,20 @@ class DjangoArtisan(apps.AppConfig):
         try:
             settings.DEBUG
         except NameError:
-            logger.info("settings.DEBUG is not defined")
+            logger.info("settings.DEBUG is not defined, assuming production mode.")
         else:
             if settings.DEBUG and 'runserver' in sys.argv:
                 mypy_package = importlib.util.find_spec("mypy")
                 if settings.MYPY and mypy_package:
                     from .checks import mypy
+        r = redis.Redis(host="127.0.0.1", port="6379")
+        try:
+            is_connected = r.ping()
+            if is_connected:
+                logger.info("redis is functioning ok")
+        except redis.ConnectionError:
+             logger.error("ERROR! REDIS CANNOT CONNECT")
+
 
 
 def callback(sender: DjangoArtisan, **kwargs) -> None:

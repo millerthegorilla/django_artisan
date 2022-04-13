@@ -8,7 +8,6 @@ from django import conf, http, forms, shortcuts, urls, utils
 from django.core import serializers, files
 from django.core import paginator as pagination
 from django.contrib import auth
-from django.contrib import sitemaps
 from django.contrib.sites import models as site_models
 from django.db import models as db_models
 from django.middleware import csrf
@@ -23,6 +22,7 @@ from django_forum import models as forum_models
 from django_forum import documents as forum_documents
 
 from . import models as artisan_models
+from . import tasks as artisan_tasks
 from . import forms as artisan_forms
 from . import documents as artisan_documents 
 
@@ -110,16 +110,6 @@ class PostCreate(forum_views.PostCreate):
             'django_artisan:post_view', args=(
                 post.id, post.slug,))
 
-"""
-    pings_google to recrawl site when user opts to list on about page
-    or to display personal page
-"""
-def ping_google_func() -> None:
-    try:
-        sitemaps.ping_google()
-        logger.info("Pinged Google!")
-    except Exception as e:
-        logger.error("unable to ping_google : {0}".format(e))
 
 @decorators.method_decorator(cache.never_cache, name='dispatch')
 class ArtisanForumProfile(forum_views.ForumProfile):
@@ -161,9 +151,9 @@ class ArtisanForumProfile(forum_views.ForumProfile):
                        'listed_member' in form.changed_data):
                         try:
                             if not conf.settings.DEBUG:
-                                tasks.async_task(ping_google_func)
+                                tasks.async_task(artisan_tasks.ping_google_func)
                         except:
-                            tasks.async_task(ping_google_func)
+                            tasks.async_task(artisan_tasks.ping_google_func)
                     changing = []
                     for change in form.changed_data:
                         if change == "image_file":

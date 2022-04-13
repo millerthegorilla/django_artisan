@@ -176,12 +176,11 @@ class PostListSearch(forum_forms.PostListSearch):
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.layout = layout.Layout(
-            layout.Fieldset(
-                '',
-                layout.Field('q', wrapper_class="col-12 col-sm-8 col-md-6 col-lg-4"),
-                layout.Field('published', wrapper_class="mb-3 col-lg-auto col-12", css_class=""),
-                layout.Submit('Search', 'search', css_class="col-auto mt-3"),
-                css_class="text-white row justify-content-center align-items-center"
+            layout.Div(
+                layout.Field('q', wrapper_class="col-12 col-sm-8 col-md-6 col-lg-4 pe-2"),
+                layout.Field('published', wrapper_class="col-auto pe-2", css_class="custom-select"),
+                layout.Submit('Search', 'search', css_class="col-auto mb-3"),
+                css_class="d-flex col-auto text-white justify-content-center align-items-end flex-wrap"
             ),
         )
         self.helper.form_id = 'id-search-form'
