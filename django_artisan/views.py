@@ -239,6 +239,7 @@ class ArtisanForumProfile(forum_views.ForumProfile):
         return context
 
 
+@decorators.method_decorator(cache.never_cache, name='dispatch')
 class AboutPage(generic.list.ListView):
     model = artisan_models.Event
     template_name = 'django_artisan/about.html'

@@ -10,6 +10,16 @@
   background: linear-gradient(0deg, rgba(82,80,126,1) 2%, rgba(9,121,113,1) 15%, rgba(0,212,255,1) 100%);
 }
 
+/* colors */
+.color-yellow {
+  color: yellow;
+}
+
+/* href no underline */
+.no-underline {
+  text-decoration: none;
+}
+
 /* COOKIE CONSENT */
 .cookie-consent {
     position: fixed;
