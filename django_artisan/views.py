@@ -93,7 +93,8 @@ class PostList(forum_views.PostList):
             'page_obj': page_obj,
             'search': search,
             'is_a_search': is_a_search,
-            'site_url': (request.scheme or 'https') + '://' + conf.settings.SITE_DOMAIN}
+            'site_url': ('https' if self.request.is_secure() else 'http') + '://' + conf.settings.SITE_DOMAIN
+        }
         return shortcuts.render(request, self.template_name, context)
 
 
@@ -233,9 +234,7 @@ class ArtisanForumProfile(forum_views.ForumProfile):
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['page_obj'] = page_obj
-        context ['site_url'] = (('https' if self.request.is_secure() else 'http')
-                                + '://'
-                                + conf.settings.SITE_DOMAIN)
+        context['site_url'] = ('https' if self.request.is_secure() else 'http') + '://' + conf.settings.SITE_DOMAIN
         return context
 
 
@@ -247,7 +246,7 @@ class AboutPage(generic.list.ListView):
     def get_context_data(self, **kwargs) -> dict:
         data = super().get_context_data(**kwargs)
         data['about_text'] = conf.settings.ABOUT_US_SPIEL
-        data['site_url'] = 'https' if self.request.is_secure() else 'http' + '://' + conf.settings.SITE_DOMAIN
+        data['site_url'] = ('https' if self.request.is_secure() else 'http') + '://' + conf.settings.SITE_DOMAIN
         qs = artisan_models.ArtisanForumProfile.objects.all().exclude(profile_user__is_superuser=True).exclude(listed_member=False) \
                                        .values_list('display_name', 'avatar__image_file')
         if qs.exists():

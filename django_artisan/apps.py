@@ -1,5 +1,5 @@
 import importlib.util
-import sys, logging, redis
+import sys, logging, redis, elasticsearch
 
 from django import apps
 from django.db import models
@@ -24,14 +24,6 @@ class DjangoArtisan(apps.AppConfig):
                 mypy_package = importlib.util.find_spec("mypy")
                 if settings.MYPY and mypy_package:
                     from .checks import mypy
-        r = redis.Redis(host="127.0.0.1", port="6379")
-        try:
-            is_connected = r.ping()
-            if is_connected:
-                logger.info("redis is functioning ok")
-        except redis.ConnectionError:
-             logger.error("ERROR! REDIS CANNOT CONNECT")
-
 
 
 def callback(sender: DjangoArtisan, **kwargs) -> None:

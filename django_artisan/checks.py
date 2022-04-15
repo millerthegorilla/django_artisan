@@ -20,7 +20,7 @@ class MyPyErrorLocation:
         return self.location
 
 
-@checks.register()
+@checks.register("mypy")
 def mypy(app_configs, **kwargs) -> List:
     print("Performing mypy checks...\n")
     # By default run mypy against the whole database everytime checks are performed.
@@ -71,4 +71,44 @@ def mypy(app_configs, **kwargs) -> List:
         #     any(x in message.strip() for x in ['has no attribute "profile"']) == False:
         #     errors.append(CheckMessage(level, message, code, obj=MyPyErrorLocation(location)))
 
+    return errors
+
+@register("connectivity")
+def connection_check(app_configs, **kwargs):
+    errors = []
+    check_passed = False
+    r = redis.Redis(host="127.0.0.1", port="6379")
+        try:
+            is_connected = r.ping()
+            if is_connected:
+                check_passed = True
+            else:
+                check_passed = False
+        except redis.ConnectionError:
+             check_passed = False
+    if not check_passed:
+        errors.append(
+            Error(
+                'redis error',
+                hint='unable to connect to redis',
+                id='myapp.E001',
+            )
+        )
+    check_passed = False
+    try:
+        es = elasticsearch.Elasticsearch(['http://localhost:9200/'], verify_certs=True)
+        if es.ping():
+            check_passed = True
+        else:
+            check_passed = False
+    except ConnectionError:
+        check_passed = False
+    if not check_passed:
+        errors.append(
+            Error(
+                'elasticsearch error',
+                hint='unable to connect to elasticsearch',
+                id='myapp.E002',
+            )
+        )
     return errors
