@@ -342,7 +342,7 @@ class UserProductImageUpload(auth.mixins.LoginRequiredMixin, generic.edit.FormVi
     @cache.never_cache
     def get(self, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
         form = self.form_class()
-        message = 'Choose a file and add some accompanying text and a shop link if you have one.  The link will be accessed by the shop link title, if you add a title.'
+        message = 'Choose a file and add some accompanying text and a shop link if you have one'
         images = self.model.objects.filter(user_profile=self.request.user.profile)
         context = {'images': images, 'form': form, 'message': message}
         return render(self.request, './django_artisan/profile/images/image_update.html', context)

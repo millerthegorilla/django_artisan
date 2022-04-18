@@ -19,6 +19,3 @@ def category_visible(request):
 def location_visible(request):
     return {'LOCATION_VISIBLE': conf.settings.SHOW_LOCATION}
 
-def max_images(request):
-    return {'MAX_IMAGES': conf.settings.MAX_USER_IMAGES}
-
