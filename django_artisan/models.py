@@ -159,7 +159,7 @@ class UserProductImage(models.Model):
                                                             check_content_type=True,
                                                             scan_viruses=True,
                                                             media_integrity=True,
-                                                            max_size_limit=2621440)
+                                                            max_size_limit=conf.settings.MAX_UPLOAD_SIZE)
     text: models.CharField = models.CharField(max_length=400, default='', blank=True)
     caption: models.CharField = models.CharField(max_length=400, default='', blank=True)
     title: models.CharField = models.CharField(max_length=30, default='', blank=True)

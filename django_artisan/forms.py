@@ -129,7 +129,7 @@ class UserProductImage(forms.ModelForm):
                                                  check_content_type=True,
                                                  scan_viruses=True,
                                                  media_integrity=True,
-                                                 max_size_limit=2621440)
+                                                 max_size_limit=conf.settings.MAX_UPLOAD_SIZE)
 
     class Meta:
         model= artisan_models.UserProductImage
