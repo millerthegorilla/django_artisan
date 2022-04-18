@@ -18,6 +18,15 @@
 /* href no underline */
 .no-underline {
   text-decoration: none;
+  outline: none;
+}
+
+#textarea a {
+  color: #9BE0FF;
+}
+
+#textarea a:hover {
+  color: #18087B;
 }
 
 /* COOKIE CONSENT */

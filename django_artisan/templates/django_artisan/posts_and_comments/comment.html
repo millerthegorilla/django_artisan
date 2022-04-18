@@ -13,7 +13,7 @@
                                     <a href="/people/{{comment.author}}/">{% thumbnail comment.author.profile.avatar.image_file "40x40" crop="center" as im %}
                                         <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" class="rounded-circle me-1" value="image-{{ forloop.counter }}" title="{{comment.author}}"></img></a>
                                     {% endthumbnail %}
-    		                	    <a class="col-1 no-underline" href="{{request.path}}#{{comment.slug}}" id="{{ comment.slug }}"><h2 class="color-yellow me-1">#</h2></a>
+    		                	    <h2 class=""><a class="color-yellow me-1 border-0 col-1 no-underline" href="{{request.path}}#{{comment.slug}}" id="{{ comment.slug }}">#</a></h2>
 		                	{% if not comment.moderation_date %}
     			                	<div id="comment-text-{{ forloop.counter }}" class="comment-text">
     			                        {{ comment.text|linebreaks|urlize|safe }}
