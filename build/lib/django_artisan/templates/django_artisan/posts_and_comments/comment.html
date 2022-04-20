@@ -7,7 +7,7 @@
 		        <div class="row mx-auto">
 			        <div class="comments ps-4">
 		    		{% for comment in comments %}
-		    		{% cache 30 comment comment.id comment.slug %}
+		    		{% cache 30 comment request.user comment.id comment.slug %}
 		                <div class="flex-column mx-auto">
                                 <div class="d-flex">
                                     <a href="/people/{{comment.author}}/">{% thumbnail comment.author.profile.avatar.image_file "40x40" crop="center" as im %}
