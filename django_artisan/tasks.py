@@ -1,5 +1,6 @@
 import logging
 
+from django import core
 from django.contrib import sitemaps
 
 logger = logging.getLogger('django_artisan')
@@ -17,18 +18,20 @@ def ping_google_func() -> None:
     except Exception as e:
         logger.error("unable to ping_google : {0}".format(e))
 
-def db_backup(self) -> None:
+def db_backup() -> None:
     # clear existing backups first - dbbackup --clean doesn't work with
     # dropbox.
-    try:
-        dbx = dropbox.Dropbox(
-            confg.settings.DBBACKUP_STORAGE_OPTIONS['oauth2_access_token'])
-    except dropbox.exceptions.AuthError as e:
-        logger.error("Dropbox Auth Issue : {0}".format(e))
-    except dropbox.exceptions.HttpError as e:
-        logger.error("Dropbox HttpError : {0}".format(e))
-    for entry in dbx.files_list_folder('', recursive=True).entries:
-        dbx.files_delete(entry.path_display)
-    management.call_command("dbbackup --traceback")
-    management.call_command("mediabackup")
+    core.management.call_command("dbbackup", "-e", "--clean")
+    core.management.call_command("mediabackup", "-e", "--clean")
     logger.info("succesfully backed up database and media files")
+
+def db_backup_hook(task) -> None:
+    if task.success:
+        logger.info("db and media backedup succesfully!")
+    else:
+        logger.warning("db and media backup failed!")
+        core.mail.mail_admins(has_attr(core.settings, "django site"),
+                              "db and media backup failed at {}".format(task.started), 
+                              fail_silently=False, 
+                              connection=None, 
+                              html_message=None)
