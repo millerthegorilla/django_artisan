@@ -22,91 +22,115 @@ from . import fields as artisan_fields
 class Post(forum_forms.Post):
     class Meta(forum_forms.Post.Meta):
         model = artisan_models.Post
-        fields = forum_forms.Post.Meta.fields + ['category', 'location']
+        fields = forum_forms.Post.Meta.fields + ["category", "location"]
         widgets = forum_forms.Post.Meta.widgets
-        labels = {'category': 'Choose a category for your post...',
-                  'location': 'Which island...?'}
+        labels = {
+            "category": "Choose a category for your post...",
+            "location": "Which island...?",
+        }
 
-    def __init__(self, user_name: str = None, post: artisan_models.Post = None, *args, **kwargs) -> None:
+    def __init__(
+        self, user_name: str = None, post: artisan_models.Post = None, *args, **kwargs
+    ) -> None:
         super().__init__(user_name=user_name, post=post, *args, **kwargs)
-        checked_string = ''
-        if post and user_name and post.subscribed_users.filter(
-                username=user_name).count():
-            checked_string = 'checked'
-        checkbox_string = '<input type="checkbox" id="subscribe_cb" name="subscribe" value="Subscribe" ' + \
-            checked_string + '> \
+        checked_string = ""
+        if (
+            post
+            and user_name
+            and post.subscribed_users.filter(username=user_name).count()
+        ):
+            checked_string = "checked"
+        checkbox_string = (
+            '<input type="checkbox" id="subscribe_cb" name="subscribe" value="Subscribe" '
+            + checked_string
+            + '> \
                               <label for="subscribe_cb" class="tinfo">Subscribe to this post...</label><br>'
+        )
         self.helper.layout = layout.Layout(
             layout.Fieldset(
-                'Create your post...',
-                bootstrap5.FloatingField('title'),
-                layout.Field('text', css_class="mb-3 post-create-form-text"),
-                layout.HTML("<div class='font-italic mb-3 tinfo'>Maximum of 2000 characters.  Click on word count to see how many characters you have used...</div>"),
+                "Create your post...",
+                bootstrap5.FloatingField("title"),
+                layout.Field("text", css_class="mb-3 post-create-form-text"),
+                layout.HTML(
+                    "<div class='font-italic mb-3 tinfo'>Maximum of 2000 characters.  Click on word count to see how many characters you have used...</div>"
+                ),
                 layout.Div(
-                    layout.Field('category', css_class="col-auto") if conf.settings.SHOW_CATEGORY else layout.Div(),
-                    layout.Field('location', css_class="col-auto") if conf.settings.SHOW_LOCATION else layout.Div(),
-                    css_class="col-8 col-sm-4 col-md-4 col-lg-3 tinfo"
+                    layout.Field("category", css_class="col-auto")
+                    if conf.settings.SHOW_CATEGORY
+                    else layout.Div(),
+                    layout.Field("location", css_class="col-auto")
+                    if conf.settings.SHOW_LOCATION
+                    else layout.Div(),
+                    css_class="col-8 col-sm-4 col-md-4 col-lg-3 tinfo",
                 ),
                 layout.HTML(checkbox_string),
-                layout.Submit('save', 'Publish Post', css_class="col-auto mt-3 mb-3"),
+                layout.Submit("save", "Publish Post", css_class="col-auto mt-3 mb-3"),
             )
         )
-        self.helper.form_action = 'django_artisan:post_create_view'
+        self.helper.form_action = "django_artisan:post_create_view"
 
 
 class ArtisanForumProfile(forum_forms.ForumProfile):
-    image_file = safe_image_forms.SafeImageField(allowed_extensions=('jpg', 'png', 'webp'),
-                                                 check_content_type=True,
-                                                 scan_viruses=True,
-                                                 media_integrity=True,
-                                                 max_size_limit=2621440)
+    image_file = safe_image_forms.SafeImageField(
+        allowed_extensions=("jpg", "png", "webp"),
+        check_content_type=True,
+        scan_viruses=True,
+        media_integrity=True,
+        max_size_limit=2621440,
+    )
 
     class Meta(forum_forms.ForumProfile.Meta):
         model = artisan_models.ArtisanForumProfile
         fields = forum_forms.ForumProfile.Meta.fields + [
-            'image_file',
-            'bio',
-            'shop_web_address',
-            'outlets',
-            'listed_member',
-            'display_personal_page',
+            "image_file",
+            "bio",
+            "shop_web_address",
+            "outlets",
+            "listed_member",
+            "display_personal_page",
         ]
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.fields['image_file'].widget.is_required = False
-        self.fields['image_file'].required = False
-        self.fields['image_file'].help_text = 'A single image for your personal page, \
-                                              click Update Profile to upload it...'
-        self.fields['bio'] = forms.fields.CharField(
+        self.fields["image_file"].widget.is_required = False
+        self.fields["image_file"].required = False
+        self.fields[
+            "image_file"
+        ].help_text = "A single image for your personal page, \
+                                              click Update Profile to upload it..."
+        self.fields["bio"] = forms.fields.CharField(
             label="Biographical Information",
-            help_text='Biographical detail is a maximum 500 character space to display \
-                                     on your personal page.',
+            help_text="Biographical detail is a maximum 500 character space to display \
+                                     on your personal page.",
             widget=forms.Textarea(),
-            required=False)
-        self.fields['shop_web_address'] = forms.fields.CharField(
-            label='Your Online Shop Web Address',
-            help_text='Your shop web address to be displayed on your personal page',
-            required=False)
-        self.fields['outlets'] = forms.fields.CharField(
-            label='Outlets that sell your wares',
-            help_text='A comma separated list of outlets that sell your stuff, for your personal page',
-            required=False)
-        self.fields['city'] = forms.fields.CharField(label='Parish', required=False)
-        self.fields['country'] = forms.fields.CharField(label='Island', required=False)
+            required=False,
+        )
+        self.fields["shop_web_address"] = forms.fields.CharField(
+            label="Your Online Shop Web Address",
+            help_text="Your shop web address to be displayed on your personal page",
+            required=False,
+        )
+        self.fields["outlets"] = forms.fields.CharField(
+            label="Outlets that sell your wares",
+            help_text="A comma separated list of outlets that sell your stuff, for your personal page",
+            required=False,
+        )
+        self.fields["city"] = forms.fields.CharField(label="Parish", required=False)
+        self.fields["country"] = forms.fields.CharField(label="Island", required=False)
         # add to the super class fields
         self.helper.layout.fields = self.helper.layout.fields + [
             artisan_fields.FileClearInput(
-                'image_file', css_class="form-control form-control-lg"),
-            bootstrap5.FloatingField('bio'),
-            bootstrap5.FloatingField('shop_web_address'),
-            bootstrap5.FloatingField('outlets'),
-            layout.Div(layout.Field('listed_member'), css_class="tinfo"),
-            layout.Div(layout.Field('display_personal_page'), css_class="tinfo"),
+                "image_file", css_class="form-control form-control-lg"
+            ),
+            bootstrap5.FloatingField("bio"),
+            bootstrap5.FloatingField("shop_web_address"),
+            bootstrap5.FloatingField("outlets"),
+            layout.Div(layout.Field("listed_member"), css_class="tinfo"),
+            layout.Div(layout.Field("display_personal_page"), css_class="tinfo"),
         ]
-        self.helper.form_id = 'id-profile-form'
-        self.helper.form_method = 'post'
-        self.helper.form_class = 'col-auto tinfo'
+        self.helper.form_id = "id-profile-form"
+        self.helper.form_method = "post"
+        self.helper.form_class = "col-auto tinfo"
         self.helper.form_tag = False
 
     # def clean(self) -> Dict[str, Any]:
@@ -119,48 +143,57 @@ class CustomRegistrationForm(forum_custom_reg_forms.CustomUserCreation):
 
 
 ##class ArtisanForumProfileUser(forum_forms.ForumProfileUser):
-  #  model = artisan_models.ArtisanForumProfile
+#  model = artisan_models.ArtisanForumProfile
 
 MAX_NUMBER_OF_IMAGES = conf.settings.MAX_USER_IMAGES
 
 
 class UserProductImage(forms.ModelForm):
-    file = safe_image_forms.SafeImageField(allowed_extensions=('jpg', 'png', 'webp'),
-                                                 check_content_type=True,
-                                                 scan_viruses=True,
-                                                 media_integrity=True,
-                                                 max_size_limit=conf.settings.MAX_UPLOAD_SIZE)
+    file = safe_image_forms.SafeImageField(
+        allowed_extensions=("jpg", "png", "webp"),
+        check_content_type=True,
+        scan_viruses=True,
+        media_integrity=True,
+        max_size_limit=conf.settings.MAX_UPLOAD_SIZE,
+    )
 
     class Meta:
-        model= artisan_models.UserProductImage
-        fields = ['file', 'title', 'text',
-                  'shop_link', 'shop_link_title']
+        model = artisan_models.UserProductImage
+        fields = ["file", "title", "text", "shop_link", "shop_link_title"]
 
-    def __init__(self, instance: 'UserProductImage' = None, user: User = None, *args, **kwargs) -> None:
+    def __init__(
+        self, instance: "UserProductImage" = None, user: User = None, *args, **kwargs
+    ) -> None:
         self.user = user
         super().__init__(*args, **kwargs)
-        self.fields['file'].validators.append(self.restrict_amount)
+        self.fields["file"].validators.append(self.restrict_amount)
         self.helper = helper.FormHelper()
         self.helper.form_tag = False
         self.helper.layout = layout.Layout(
             layout.Fieldset(
-                            '',
-                            artisan_fields.FileInput('file'),
-                            bootstrap5.FloatingField('title'),
-                            bootstrap5.FloatingField('text'),
-                            bootstrap5.FloatingField('shop_link'),
-                            bootstrap5.FloatingField('shop_link_title'),),
+                "",
+                artisan_fields.FileInput("file"),
+                bootstrap5.FloatingField("title"),
+                bootstrap5.FloatingField("text"),
+                bootstrap5.FloatingField("shop_link"),
+                bootstrap5.FloatingField("shop_link_title"),
+            ),
         )
-        self.helper.form_id = 'id-upload-form'
-        self.helper.form_method = 'post'
-        self.helper.form_class = 'col-auto col-xs-3'
+        self.helper.form_id = "id-upload-form"
+        self.helper.form_method = "post"
+        self.helper.form_class = "col-auto col-xs-3"
 
     def restrict_amount(self, count: int) -> None:
         if artisan_models.UserProductImage.objects.exists() and self.user is not None:
-            if artisan_models.UserProductImage.objects.filter(
-                    user_profile=self.user.profile).count() >= MAX_NUMBER_OF_IMAGES:
+            if (
+                artisan_models.UserProductImage.objects.filter(
+                    user_profile=self.user.profile
+                ).count()
+                >= MAX_NUMBER_OF_IMAGES
+            ):
                 raise core.exceptions.ValidationError(
-                    'User already has {} images'.format(MAX_NUMBER_OF_IMAGES))
+                    "User already has {} images".format(MAX_NUMBER_OF_IMAGES)
+                )
 
 
 class PostListSearch(forum_forms.PostListSearch):
@@ -170,22 +203,31 @@ class PostListSearch(forum_forms.PostListSearch):
     #     choices=settings.LOCATION.choices, required=False, initial=settings.LOCATION.ANY_ISLE)
 
     class Meta(forum_forms.PostListSearch.Meta):
-        fields = forum_forms.PostListSearch.Meta.fields + ['search']
+        fields = forum_forms.PostListSearch.Meta.fields + ["search"]
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.layout = layout.Layout(
             layout.Div(
-                layout.Field('q', wrapper_class="col-12 col-sm-8 col-md-6 col-lg-4 pe-2"),
-                layout.Field('published', wrapper_class="col-auto pe-2", css_class="custom-select"),
-                layout.Submit('Search', 'search', css_class="col-auto mb-3"),
-                css_class="d-flex col-auto text-white justify-content-center align-items-end flex-wrap"
+                layout.Field(
+                    "q", wrapper_class="col-12 col-sm-8 col-md-6 col-lg-4 pe-2"
+                ),
+                layout.Field(
+                    "published",
+                    wrapper_class="col-auto pe-2",
+                    css_class="custom-select",
+                ),
+                layout.Submit("Search", "search", css_class="col-auto mb-3"),
+                css_class="d-flex col-auto text-white justify-content-center align-items-end flex-wrap",
             ),
         )
-        self.helper.form_id = 'id-search-form'
-        self.helper.form_method = 'get'
-        self.helper.form_class = 'search-form col-12 col-sm-12 col-md-10 col-lg-6 text-white'
+        self.helper.form_id = "id-search-form"
+        self.helper.form_method = "get"
+        self.helper.form_class = (
+            "search-form col-12 col-sm-12 col-md-10 col-lg-6 text-white"
+        )
+
 
 # handles deletion  ## TODO is this even used?
 # class UserProductImageDelete(forms.ModelForm):
