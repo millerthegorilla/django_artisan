@@ -46,7 +46,7 @@ class Command(base.BaseCommand):
             self.stdout.write(self.style.SUCCESS('Creating user number {}'.format(i+1)))
             first_name = fake.unique.first_name()
             last_name = fake.unique.last_name()
-            new_user = auth.get_user_model().objects.create(
+            new_user = auth.get_user_model(
                 username=first_name + str(uuid.uuid4()),
                 first_name=first_name,
                 last_name=last_name,

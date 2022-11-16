@@ -7,7 +7,7 @@ from crispy_forms import helper
 from crispy_bootstrap5 import bootstrap5
 
 from django import conf, core, forms
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 
 from django_forum import models as forum_models

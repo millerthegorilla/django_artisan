@@ -102,17 +102,16 @@ signals.post_save.disconnect(forum_models.create_user_forum_profile, sender=auth
 @receiver(signals.post_save, sender=auth_models.User)
 def create_user_artisan_forum_profile(sender, instance: auth_models.User, created: bool = False, **kwargs):
     if created:
-        ArtisanForumProfile.objects.create(
-            profile_user=instance,
-            avatar=forum_models.Avatar.objects.create(
-                image_file=forum_models.default_avatar(
-                    randint(
-                        1,
-                        4))))
-    try:
-        instance.profile.save()
-    except (exceptions.ObjectDoesNotExist, exceptions.FieldError) as e:
-        logger.error("Error saving ArtisanForumProfile : {0}".format(e))
+        try:
+            ArtisanForumProfile.objects.create(
+                profile_user=instance,
+                avatar=forum_models.Avatar.objects.create(
+                    image_file=forum_models.default_avatar(
+                        randint(
+                            1,
+                            4))))
+        except (exceptions.ObjectDoesNotExist, exceptions.FieldError) as e:
+            logger.error("Error saving ArtisanForumProfile : {0}".format(e))
 
 # @receiver(signals.post_save, sender=auth_models.User)
 # def save_user_artisan_forum_profile(sender, instance: auth_models.User, **kwargs):

@@ -4,7 +4,11 @@
                 <table id="table">
                     <thead class="sub-headline-text">
                         <tr>
-                            <th scope="Author">Author</th>
+                            {% if request.path != '/users/accounts/profile/' %}
+                                <th scope="Author">Author</th>
+                            {% else %}
+                                <th></th>
+                            {% endif %}
                             <th scope="Title">Title (try clicking one)</th>
                             <th scope="PostLeader">Post Leader</th>
                             {% if CATEGORY_VISIBLE %}<th scope="Category">Category</th>{% endif %}
@@ -15,12 +19,16 @@
                     </thead>
                     <tbody id="post-table" class="tinfo post-table">
                         {% for post in page_obj.object_list %}
-                        {% cache 30 "post_teaser_" post.id post.slug %}
+                        {% cache 30 "post_teaser_" post.id post.slug request.path %}
                             <tr >
                                     <td scope="row" class="avatar d-flex justify-content-between align-items-center pe-5" data-label="Author">
-                                        {% thumbnail post.author.profile.avatar.image_file "50x50" crop="center" as im %}
-                                            <a href="/people/{{post.author.profile.display_name}}"><img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" class="rounded-circle" id="image-{{ post.author.profile.display_name }}_avatar-image" title="{{post.author.profile.display_name}}" /></a>
-                                        {% endthumbnail %}
+                                        {% if request.path != '/users/accounts/profile/' %}
+                                            {% thumbnail post.author.profile.avatar.image_file "50x50" crop="center" as im %}
+                                                <a href="/people/{{post.author.profile.display_name}}"><img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" class="rounded-circle" id="image-{{ post.author.profile.display_name }}_avatar-image" title="{{post.author.profile.display_name}}" /></a>
+                                            {% endthumbnail %}
+                                        {% endif %}
+                                    </td>
+                                    <td scope="row" class="avatar d-flex justify-content-between align-items-center pe-5" data-label="Author">
                                         {% if post.pinned %}
                                             {% with site_url|add:'/static/django_forum/images/yellow-pin.png' as banner_url %}
                                                 {% thumbnail banner_url "30x30" format='WEBP' as im %}

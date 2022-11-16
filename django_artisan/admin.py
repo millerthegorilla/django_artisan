@@ -1,4 +1,3 @@
-import dropbox
 import logging
 
 from django import apps, conf, http

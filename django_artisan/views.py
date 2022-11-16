@@ -286,6 +286,7 @@ class LandingPage(generic.base.TemplateView):
         return context
 
 
+@decorators.method_decorator(cache.never_cache, name='dispatch')
 class PersonalPage(generic.detail.DetailView):
     model = artisan_models.ArtisanForumProfile
     slug_url_kwarg = 'name_slug'
@@ -333,13 +334,14 @@ class PersonalPage(generic.detail.DetailView):
             return redirect(self.request.META.get('HTTP_REFERER'))
 
 
+@decorators.method_decorator(cache.never_cache, name='dispatch')
 class UserProductImageUpload(auth.mixins.LoginRequiredMixin, generic.edit.FormView):
     model = artisan_models.UserProductImage
     form_class = artisan_forms.UserProductImage
     template_name = 'django_artisan/profile/images/image_update.html'
     success_url = urls.reverse_lazy('django_artisan:image_update')
     
-    @cache.never_cache
+    #@cache.never_cache
     def get(self, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
         form = self.form_class()
         message = 'Choose a file and add some accompanying text and a shop link if you have one.  The link will be accessed by the shop link title, if you add a title.'
